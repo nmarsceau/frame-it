@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frame-It</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body.dragging {
+            background-color: lightblue;
+        }
+
+        #canvas {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #toolbar {
+            width: max-content;
+            position: absolute;
+            right: 0;
+            top: 0;
+            text-align: right;
+            padding: 5px 10px;
+            border: 1px solid black;
+            border-top: 0;
+            border-right: 0;
+            border-bottom-left-radius: 10px;
+        }
+
+        #thickness {
+            width: 25px;
+        }
+
+        .spacer {
+            padding-inline: 5px;
+        }
+
+        #picker {
+            background-color: aliceblue;
+            border: 1px solid lightblue;
+            position: absolute;
+            bottom: -361px;
+            right: 0;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .visuallyHidden {
+            clip: rect(0 0 0 0);
+            clip-path: inset(50%);
+            height: 1px;
+            overflow: hidden;
+            position: absolute;
+            white-space: nowrap;
+            width: 1px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+</head>
+<body draggable="true">
+    <div id="toolbar">
+        <input type="file" id="file" accept="image/png, image/gif, image/jpeg">
+        <button type="button" id="color">Color</button>
+        <div id="picker" hidden></div>
+        <label for="thickness">Thickness:</label>
+        <input type="number" id="thickness" min="0" step="1" value="2">
+        <button type="button" id="clear">Clear</button>
+        <button type="button" id="download">Download</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas')
+        const context = canvas.getContext('2d')
+        const img = new Image()
+        img.addEventListener('load', drawImage)
+        const colorToggle = document.getElementById('color')
+        const file = document.getElementById('file')
+
+        function clearCanvas() {
+            context.clearRect(0, 0, canvas.width, canvas.height)
+        }
+
+        function drawImage() {
+            clearCanvas()
+            const thickness = document.getElementById('thickness').value
+            const color = colorPicker.color.hexString
+            canvas.width = img.naturalWidth + 2 * thickness
+            canvas.height = img.naturalHeight + 2 * thickness
+            context.drawImage(img, thickness, thickness)
+            context.fillStyle = color
+            context.fillRect(0, 0, thickness, canvas.height)
+            context.fillRect(0, 0, canvas.width, thickness)
+            context.fillRect(canvas.width - thickness, 0, thickness, canvas.height)
+            context.fillRect(0, canvas.height - thickness, canvas.width, thickness)
+        }
+
+        document.getElementById('clear').addEventListener('click', clearCanvas)
+
+        document.getElementById('download').addEventListener('click', () => {
+            const link = document.createElement('a')
+            link.download = 'image.png'
+            link.href = canvas.toDataURL()
+            link.click()
+        })
+
+        document.getElementById('thickness').addEventListener('change', drawImage)
+
+        const colorPickerContainer = document.getElementById('picker')
+
+        const colorPicker = new iro.ColorPicker('#picker', {color: '#000000'})
+        colorPicker.on('color:change', drawImage)
+        
+        colorToggle.addEventListener('click', () => {
+            colorPickerContainer.toggleAttribute('hidden')
+        })
+
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('#picker') === null && event.target !== colorToggle) {
+                colorPickerContainer.setAttribute('hidden', '')
+            }
+        })
+
+        function setImageFromFile(file) {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = () => {img.src = reader.result}
+        }
+
+        file.addEventListener('change', (event) => {
+            setImageFromFile(event.target.files[0])
+        })
+
+        document.addEventListener('paste', (event) => {
+            if (event.clipboardData.files.length > 0) {
+                setImageFromFile(event.clipboardData.files[0])
+            }
+        })
+    </script>
+</body>
+</html>
