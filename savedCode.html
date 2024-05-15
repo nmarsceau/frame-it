@@ -1,0 +1,87 @@
+<style>
+#picker {
+	background-color: aliceblue;
+	border: 1px solid lightblue;
+	position: absolute;
+	bottom: -361px;
+	right: 0;
+	padding: 10px;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#thickness {
+	width: 25px;
+}
+
+.ingressToolbar {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 7px 12px 14px 9px;
+	background: rgba(255, 212, 0, 0.15);
+	border: 3px solid rgba(255, 148, 0, 0.7);
+	border-right: none;
+	border-top: none;
+	border-bottom-left-radius: 30px;
+}
+</style>
+<script>
+// Color and Thickness
+const colorToggle = document.getElementById('color')
+
+document.getElementById('thickness').addEventListener('change', drawImage)
+
+const colorPickerContainer = document.getElementById('picker')
+
+const colorPicker = new iro.ColorPicker('#picker', {color: '#000000'})
+colorPicker.on('color:change', drawImage)
+
+colorToggle.addEventListener('click', () => {
+	colorPickerContainer.toggleAttribute('hidden')
+})
+
+document.addEventListener('click', (event) => {
+	if (event.target.closest('#picker') === null && event.target !== colorToggle) {
+		colorPickerContainer.setAttribute('hidden', '')
+	}
+})
+
+function drawImage() {
+	const thickness = document.getElementById('thickness').value
+	const color = colorPicker.color.hexString
+}
+
+// Drag and Drop
+const source = document.body
+source.addEventListener('dragstart', (event) => {
+    event.currentTarget.classList.add('dragging')
+    event.dataTransfer.clearData()
+    event.dataTransfer.setData('text/plain', event.target.id)
+})
+
+source.addEventListener('dragend', (ev) => {
+    ev.target.classList.remove('dragging')
+})
+
+const target = document.querySelector("#target");
+    target.addEventListener("dragover", (ev) => {
+    ev.preventDefault();
+});
+
+target.addEventListener("drop", (ev) => {
+    ev.preventDefault();
+    // Get the data, which is the id of the source element
+    const data = ev.dataTransfer.getData("text");
+    const source = document.getElementById(data);
+    ev.target.appendChild(source);
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+
+<button type="button" id="color" class="button">Color</button>
+<div id="picker" hidden></div>
+<label for="thickness">Thickness:</label>
+<input type="number" id="thickness" min="0" step="1" value="2">

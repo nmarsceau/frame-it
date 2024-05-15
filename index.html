@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Frame-It</title>
     <style>
+		:root {
+			--yellow: #ffd400;
+			--orange: #ffa900;
+			--darkOrange: #ff9400;
+			--brown: #674400;
+			--transparentYellow: rgba(255, 212, 0, 0.15);
+			--transparentOrange: rgba(255, 148, 0, 0.7);
+		}
+
         body {
             margin: 0;
             padding: 0;
-        }
-
-        body.dragging {
-            background-color: lightblue;
         }
 
         #canvas {
@@ -21,37 +26,16 @@
             transform: translate(-50%, -50%);
         }
 
-        #toolbar {
-            width: max-content;
+        .toolbar {
             position: absolute;
+            bottom: 0;
             right: 0;
-            top: 0;
-            text-align: right;
-            padding: 5px 10px;
-            border: 1px solid black;
-            border-top: 0;
-            border-right: 0;
-            border-bottom-left-radius: 10px;
-        }
-
-        #thickness {
-            width: 25px;
-        }
-
-        .spacer {
-            padding-inline: 5px;
-        }
-
-        #picker {
-            background-color: aliceblue;
-            border: 1px solid lightblue;
-            position: absolute;
-            bottom: -361px;
-            right: 0;
-            padding: 10px;
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
+            padding: 9px 12px 12px 9px;
+            background: var(--transparentYellow);
+            border: 3px solid var(--transparentOrange);
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 30px;
         }
 
         .visuallyHidden {
@@ -63,27 +47,111 @@
             white-space: nowrap;
             width: 1px;
         }
+
+        .button {
+            color: var(--brown);
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            padding: 6px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.1s linear;
+        }
+
+        .icon.button {
+            padding: 10px;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+        }
+
+        .icon.button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--yellow);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            transition: all 0.1s linear;
+        }
+
+        .icon.button#upload::before {
+            background: url(upload.svg) center/70% no-repeat, var(--yellow);
+        }
+
+        .icon.button#clear::before {
+            background: url(clear.svg) center/130% no-repeat, var(--yellow);
+        }
+
+        .icon.button#copy::before {
+            background: url(copy.svg) center/80% no-repeat, var(--yellow);
+        }
+
+        .icon.button#download::before {
+            background: url(download.svg) center/70% no-repeat, var(--yellow);
+        }
+
+        .icon.button::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 4px;
+            background: var(--orange);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            z-index: -1;
+            transition: all 0.1s linear;
+        }
+
+        .icon.button:hover, .icon.button:focus {
+            outline: none;
+        }
+
+        .icon.button:hover::before, .icon.button:focus::before {
+            transform: translate(2px, 2px);
+        }
+
+        .icon.button:hover::after, .icon.button:focus::after {
+            background: var(--darkOrange);
+        }
+
+        .icon.button + .icon.button {
+            margin-inline-start: 5px;
+        }
+
+        label.icon.button {
+            display: inline-block;
+            box-sizing: border-box;
+        }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
 </head>
 <body draggable="true">
-    <div id="toolbar">
-        <input type="file" id="file" accept="image/png, image/gif, image/jpeg">
-        <button type="button" id="color">Color</button>
-        <div id="picker" hidden></div>
-        <label for="thickness">Thickness:</label>
-        <input type="number" id="thickness" min="0" step="1" value="2">
-        <button type="button" id="clear">Clear</button>
-        <button type="button" id="copy">Copy</button>
-        <button type="button" id="download">Download</button>
+    <div class="toolbar">
+        <button type="button" id="upload" class="icon button">
+            <span class="visuallyHidden">Select a file</span>
+        </button>
+        <button type="button" id="copy" class="icon button">
+            <span class="visuallyHidden">Copy</span>
+        </button>
+        <button type="button" id="download" class="icon button">
+            <span class="visuallyHidden">Download</span>
+        </button>
+        <button type="button" id="clear" class="icon button">
+            <span class="visuallyHidden">Clear</span>
+        </button>
     </div>
     <canvas id="canvas"></canvas>
+    <input type="file" id="file" accept="image/png, image/gif, image/jpeg" class="visuallyHidden" tabindex="-1">
     <script>
         const canvas = document.getElementById('canvas')
         const context = canvas.getContext('2d')
         const img = new Image()
         img.addEventListener('load', drawImage)
-        const colorToggle = document.getElementById('color')
         const file = document.getElementById('file')
 
         function clearCanvas() {
@@ -91,18 +159,21 @@
         }
 
         function drawImage() {
+			const THICKNESS = 2, COLOR = "000000";
             clearCanvas()
-            const thickness = document.getElementById('thickness').value
-            const color = colorPicker.color.hexString
-            canvas.width = img.naturalWidth + 2 * thickness
-            canvas.height = img.naturalHeight + 2 * thickness
-            context.drawImage(img, thickness, thickness)
-            context.fillStyle = color
-            context.fillRect(0, 0, thickness, canvas.height)
-            context.fillRect(0, 0, canvas.width, thickness)
-            context.fillRect(canvas.width - thickness, 0, thickness, canvas.height)
-            context.fillRect(0, canvas.height - thickness, canvas.width, thickness)
+            canvas.width = img.naturalWidth + 2 * THICKNESS
+            canvas.height = img.naturalHeight + 2 * THICKNESS
+            context.drawImage(img, THICKNESS, THICKNESS)
+            context.fillStyle = COLOR
+            context.fillRect(0, 0, THICKNESS, canvas.height)
+            context.fillRect(0, 0, canvas.width, THICKNESS)
+            context.fillRect(canvas.width - THICKNESS, 0, THICKNESS, canvas.height)
+            context.fillRect(0, canvas.height - THICKNESS, canvas.width, THICKNESS)
         }
+
+        document.querySelector('#upload').addEventListener('click', (event) => {
+            file.click()
+        })
 
         document.getElementById('clear').addEventListener('click', clearCanvas)
 
@@ -111,23 +182,6 @@
             link.download = 'image.png'
             link.href = canvas.toDataURL()
             link.click()
-        })
-
-        document.getElementById('thickness').addEventListener('change', drawImage)
-
-        const colorPickerContainer = document.getElementById('picker')
-
-        const colorPicker = new iro.ColorPicker('#picker', {color: '#000000'})
-        colorPicker.on('color:change', drawImage)
-        
-        colorToggle.addEventListener('click', () => {
-            colorPickerContainer.toggleAttribute('hidden')
-        })
-
-        document.addEventListener('click', (event) => {
-            if (event.target.closest('#picker') === null && event.target !== colorToggle) {
-                colorPickerContainer.setAttribute('hidden', '')
-            }
         })
 
         function setImageFromFile(file) {
