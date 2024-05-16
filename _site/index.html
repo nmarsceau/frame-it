@@ -14,6 +14,8 @@
         document.addEventListener('paste', (event) => {
             if (event.clipboardData.files.length > 0) {
                 app.setImageFromFile(event.clipboardData.files[0])
-            }
+            } else {
+				app.setDefaultImage()
+			}
         })
         document.querySelector('#download').addEventListener('click', () => { app.download() })</script></body></html>

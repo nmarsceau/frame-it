@@ -15,6 +15,10 @@ export class App {
 		this.img.addEventListener('load', () => { this.drawImage() })
 	}
 
+	setDefaultImage() {
+		this.img.src = "./assets/images/picard.webp"
+	}
+
 	setImageFromFile(file) {
 		const reader = new FileReader()
 		reader.readAsDataURL(file)

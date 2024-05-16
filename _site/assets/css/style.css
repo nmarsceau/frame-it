@@ -73,19 +73,19 @@ body {
 }
 
 .icon.button#upload::before {
-	background: url(../svg/upload.svg) center/70% no-repeat, var(--yellow);
+	background: url(../images/upload.svg) center/70% no-repeat, var(--yellow);
 }
 
 .icon.button#clear::before {
-	background: url(../svg/clear.svg) center/130% no-repeat, var(--yellow);
+	background: url(../images/clear.svg) center/130% no-repeat, var(--yellow);
 }
 
 .icon.button#copy::before {
-	background: url(../svg/copy.svg) center/80% no-repeat, var(--yellow);
+	background: url(../images/copy.svg) center/80% no-repeat, var(--yellow);
 }
 
 .icon.button#download::before {
-	background: url(../svg/download.svg) center/70% no-repeat, var(--yellow);
+	background: url(../images/download.svg) center/70% no-repeat, var(--yellow);
 }
 
 .icon.button::after {
