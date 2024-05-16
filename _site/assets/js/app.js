@@ -20,9 +20,13 @@ export class App {
 	}
 
 	setImageFromFile(file) {
-		const reader = new FileReader()
-		reader.readAsDataURL(file)
-		reader.onload = () => {this.img.src = reader.result}
+		if (file.type.startsWith("image/")) {
+			const reader = new FileReader()
+			reader.readAsDataURL(file)
+			reader.onload = () => {this.img.src = reader.result}
+		} else {
+			this.setDefaultImage()
+		}
 	}
 
 	drawImage() {
