@@ -39,6 +39,8 @@ export class App {
 
 	clearCanvas() {
 		this.canvasContext.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height)
+		this.canvasElement.width = 0
+		this.canvasElement.height = 0
 	}
 
 	triggerFilePicker() {

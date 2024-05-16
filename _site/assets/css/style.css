@@ -5,6 +5,7 @@
 	--brown: #674400;
 	--transparentYellow: rgba(255, 212, 0, 0.15);
 	--transparentOrange: rgba(255, 148, 0, 0.7);
+	--transparentBlack: rgba(0, 0, 0, 0.5);
 }
 
 body {
@@ -17,6 +18,7 @@ body {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
+	box-shadow: 5px 5px 15px var(--transparentBlack);
 }
 
 .toolbar {
