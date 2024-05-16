@@ -1,0 +1,123 @@
+:root {
+	--yellow: #ffd400;
+	--orange: #ffa900;
+	--darkOrange: #ff9400;
+	--brown: #674400;
+	--transparentYellow: rgba(255, 212, 0, 0.15);
+	--transparentOrange: rgba(255, 148, 0, 0.7);
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+#canvas {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.toolbar {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 9px 12px 12px 9px;
+	background: var(--transparentYellow);
+	border: 3px solid var(--transparentOrange);
+	border-right: none;
+	border-bottom: none;
+	border-top-left-radius: 30px;
+}
+
+.visuallyHidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.button {
+	color: var(--brown);
+	background: transparent;
+	border: none;
+	border-radius: 10px;
+	padding: 6px 20px;
+	font-size: 1em;
+	cursor: pointer;
+	position: relative;
+	transition: all 0.1s linear;
+}
+
+.icon.button {
+	padding: 10px;
+	border-radius: 50%;
+	height: 40px;
+	width: 40px;
+}
+
+.icon.button::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: var(--yellow);
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	transition: all 0.1s linear;
+}
+
+.icon.button#upload::before {
+	background: url(/assets/svg/upload.svg) center/70% no-repeat, var(--yellow);
+}
+
+.icon.button#clear::before {
+	background: url(/assets/svg/clear.svg) center/130% no-repeat, var(--yellow);
+}
+
+.icon.button#copy::before {
+	background: url(/assets/svg/copy.svg) center/80% no-repeat, var(--yellow);
+}
+
+.icon.button#download::before {
+	background: url(/assets/svg/download.svg) center/70% no-repeat, var(--yellow);
+}
+
+.icon.button::after {
+	content: "";
+	position: absolute;
+	top: 5px;
+	left: 4px;
+	background: var(--orange);
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	z-index: -1;
+	transition: all 0.1s linear;
+}
+
+.icon.button:hover, .icon.button:focus {
+	outline: none;
+}
+
+.icon.button:hover::before, .icon.button:focus::before {
+	transform: translate(2px, 2px);
+}
+
+.icon.button:hover::after, .icon.button:focus::after {
+	background: var(--darkOrange);
+}
+
+.icon.button + .icon.button {
+	margin-inline-start: 5px;
+}
+
+label.icon.button {
+	display: inline-block;
+	box-sizing: border-box;
+}

@@ -1,0 +1,19 @@
+{
+  "name": "frame-it",
+  "version": "1.0.0",
+  "description": "This is an online tool for adding a border to an image.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx eleventy --serve",
+    "build": "npx eleventy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "clean-css": "^5.3.3",
+    "html-minifier": "^4.0.0",
+    "uglify-js": "^3.17.4"
+  }
+}
