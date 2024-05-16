@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "npx eleventy --serve",
-    "build": "env NODE_ENV=production npx eleventy --pathprefix 'frame-it'"
+    "build": "npx eleventy"
   },
   "keywords": [],
   "author": "",
