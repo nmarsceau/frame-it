@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Frame-It</title>
-    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="{{ /assets/css/style.css | url }}" rel="stylesheet">
 </head>
 <body draggable="true">
     <div class="toolbar">
@@ -24,7 +24,7 @@
     <canvas id="canvas"></canvas>
     <input type="file" id="file" accept="image/*, image/avif" class="visuallyHidden" tabindex="-1">
 	<script type="module">
-		import { App } from "/assets/js/app.js"
+		import { App } from "{{ /assets/js/app.js | url }}"
 		const app = new App(
 			document.querySelector('#canvas'),
 			document.querySelector('#file')
