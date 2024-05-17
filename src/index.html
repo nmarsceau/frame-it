@@ -21,11 +21,19 @@
             <span class="visuallyHidden">Clear</span>
         </button>
     </div>
-    <canvas id="canvas" width="0" height="0"></canvas>
+	<div id="instructions">
+		<p class="title">Select an image:</p>
+		<p class="options">
+			Paste from the clipboard<br>
+			Use the file picker below
+		</p>
+	</div>
+    <canvas id="canvas" class="hidden"></canvas>
     <input type="file" id="file" accept="image/*, image/avif" class="visuallyHidden" tabindex="-1">
 	<script type="module">
 		import { App } from "./assets/js/app.js"
 		new App().connectToDOM(document, {
+			instructions: "#instructions",
 			canvas: "#canvas",
 			fileInput: "#file",
 			clear: "#clear",

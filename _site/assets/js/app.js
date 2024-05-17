@@ -2,6 +2,7 @@ export class App {
 	THICKNESS = 2
 	COLOR = "000000"
 	dom = null
+	instructions = null
 	canvas = null
 	context = null
 	img = new Image()
@@ -22,6 +23,11 @@ export class App {
 			throw new Error("Missing canvas element.")
 		}
 		this.context = this.canvas.getContext('2d')
+
+		// Instructions
+		if (selectors.instructions !== undefined) {
+			this.instructions = dom.querySelector(selectors.instructions)
+		}
 
 		// File Input
 		if (selectors.fileInput !== undefined) {
@@ -81,6 +87,12 @@ export class App {
 
 	drawImage() {
 		this.clearCanvas()
+
+		this.canvas.classList.remove('hidden')
+		if (this.instructions) {
+			this.instructions.classList.add('hidden')
+		}
+
 		this.canvas.width = this.img.naturalWidth + 2 * this.THICKNESS
 		this.canvas.height = this.img.naturalHeight + 2 * this.THICKNESS
 		this.context.drawImage(this.img, this.THICKNESS, this.THICKNESS)
@@ -95,6 +107,11 @@ export class App {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 		this.canvas.width = 0
 		this.canvas.height = 0
+		
+		this.canvas.classList.add('hidden')
+		if (this.instructions) {
+			this.instructions.classList.remove('hidden')
+		}
 	}
 
 	copyImageToClipboard() {

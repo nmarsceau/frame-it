@@ -13,11 +13,47 @@ body {
 	padding: 0;
 }
 
+.visuallyHidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
+.hidden {
+	display: none;
+}
+
 #canvas {
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
+}
+
+#instructions {
+	position: absolute;
+	left: 50%;
+	top: 45%;
+	transform: translate(-50%, -50%);
+
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	line-height: 1.7;
+	color: #777;
+
+	.title {
+		font-size: 1.3em;
+		margin-block-end: 0;
+	}
+
+	.options {
+		font-size: 1.1em;
+		padding-left: 1em;
+		margin-block-start: 0;
+	}
 }
 
 .toolbar {
@@ -30,16 +66,6 @@ body {
 	border-right: none;
 	border-bottom: none;
 	border-top-left-radius: 30px;
-}
-
-.visuallyHidden {
-	clip: rect(0 0 0 0);
-	clip-path: inset(50%);
-	height: 1px;
-	overflow: hidden;
-	position: absolute;
-	white-space: nowrap;
-	width: 1px;
 }
 
 .button {
