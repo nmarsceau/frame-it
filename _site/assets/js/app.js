@@ -1,18 +1,68 @@
 export class App {
 	THICKNESS = 2
 	COLOR = "000000"
+	dom = null
+	canvas = null
+	context = null
+	img = new Image()
 
-	constructor(canvasElement, fileInputElement) {
-		this.canvasElement = canvasElement
-		this.canvasContext = canvasElement.getContext('2d')
-		
-		this.fileInputElement = fileInputElement
-        this.fileInputElement.addEventListener('change', (event) => {
-            this.setImageFromFile(event.target.files[0])
-        })
-		
-		this.img = new Image()
+	constructor() {
 		this.img.addEventListener('load', () => { this.drawImage() })
+	}
+
+	connectToDOM(dom, selectors) {
+		this.dom = dom
+
+		// Canvas - The one thing that's required, throw if it's not specified.
+		if (selectors.canvas === undefined) {
+			throw new Error("Missing canvas selector.")
+		}
+		this.canvas = dom.querySelector(selectors.canvas)
+		if (this.canvas === null) {
+			throw new Error("Missing canvas element.")
+		}
+		this.context = this.canvas.getContext('2d')
+
+		// File Input
+		if (selectors.fileInput !== undefined) {
+			const fileInput = dom.querySelector(selectors.fileInput)
+			fileInput.addEventListener('change', (event) => {
+				this.setImageFromFile(event.target.files[0])
+			})
+
+			// Upload Button
+			if (selectors.upload !== undefined) {
+				dom.querySelector(selectors.upload).addEventListener('click', () => { fileInput.click() })
+			}
+		}
+
+		// Clear Button
+		if (selectors.clear !== undefined) {
+			dom.querySelector(selectors.clear).addEventListener('click', () => { this.clearCanvas() })
+		}
+
+		// Copy Button
+		if (selectors.copy !== undefined) {
+			dom.querySelector(selectors.copy).addEventListener('click', () => { this.copyImageToClipboard() })
+		}
+
+		// Download Button
+		if (selectors.download !== undefined) {
+			dom.querySelector(selectors.download).addEventListener('click', () => { this.download() })
+		}
+
+		// Copy/Paste Event Listeners
+		dom.addEventListener('copy', (event) => {
+            event.preventDefault()
+            this.copyImageToClipboard()
+        })
+		dom.addEventListener('paste', (event) => {
+            if (event.clipboardData.files.length > 0) {
+				this.setImageFromFile(event.clipboardData.files[0])
+            } else {
+				this.setDefaultImage()
+			}
+        })
 	}
 
 	setDefaultImage() {
@@ -31,28 +81,24 @@ export class App {
 
 	drawImage() {
 		this.clearCanvas()
-		this.canvasElement.width = this.img.naturalWidth + 2 * this.THICKNESS
-		this.canvasElement.height = this.img.naturalHeight + 2 * this.THICKNESS
-		this.canvasContext.drawImage(this.img, this.THICKNESS, this.THICKNESS)
-		this.canvasContext.fillStyle = this.COLOR
-		this.canvasContext.fillRect(0, 0, this.THICKNESS, this.canvasElement.height)
-		this.canvasContext.fillRect(0, 0, this.canvasElement.width, this.THICKNESS)
-		this.canvasContext.fillRect(this.canvasElement.width - this.THICKNESS, 0, this.THICKNESS, this.canvasElement.height)
-		this.canvasContext.fillRect(0, this.canvasElement.height - this.THICKNESS, this.canvasElement.width, this.THICKNESS)
+		this.canvas.width = this.img.naturalWidth + 2 * this.THICKNESS
+		this.canvas.height = this.img.naturalHeight + 2 * this.THICKNESS
+		this.context.drawImage(this.img, this.THICKNESS, this.THICKNESS)
+		this.context.fillStyle = this.COLOR
+		this.context.fillRect(0, 0, this.THICKNESS, this.canvas.height)
+		this.context.fillRect(0, 0, this.canvas.width, this.THICKNESS)
+		this.context.fillRect(this.canvas.width - this.THICKNESS, 0, this.THICKNESS, this.canvas.height)
+		this.context.fillRect(0, this.canvas.height - this.THICKNESS, this.canvas.width, this.THICKNESS)
 	}
 
 	clearCanvas() {
-		this.canvasContext.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height)
-		this.canvasElement.width = 0
-		this.canvasElement.height = 0
-	}
-
-	triggerFilePicker() {
-		this.fileInputElement.click()
+		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+		this.canvas.width = 0
+		this.canvas.height = 0
 	}
 
 	copyImageToClipboard() {
-		this.canvasElement.toBlob((blob) => {
+		this.canvas.toBlob((blob) => {
 			try {
 				navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})])
 			}
@@ -63,9 +109,9 @@ export class App {
 	}
 
 	download() {
-		const link = document.createElement('a')
+		const link = this.dom.createElement('a')
 		link.download = 'image.png'
-		link.href = this.canvasElement.toDataURL()
+		link.href = this.canvas.toDataURL()
 		link.click()
 	}
 }

@@ -25,26 +25,14 @@
     <input type="file" id="file" accept="image/*, image/avif" class="visuallyHidden" tabindex="-1">
 	<script type="module">
 		import { App } from "./assets/js/app.js"
-		const app = new App(
-			document.querySelector('#canvas'),
-			document.querySelector('#file')
-		)
-
-		document.querySelector('#clear').addEventListener('click', () => { app.clearCanvas() })
-		document.querySelector('#upload').addEventListener('click', () => { app.triggerFilePicker() })
-		document.querySelector('#copy').addEventListener('click', () => { app.copyImageToClipboard() })
-		document.addEventListener('copy', (event) => {
-            event.preventDefault()
-            app.copyImageToClipboard()
-        })
-        document.addEventListener('paste', (event) => {
-            if (event.clipboardData.files.length > 0) {
-				app.setImageFromFile(event.clipboardData.files[0])
-            } else {
-				app.setDefaultImage()
-			}
-        })
-        document.querySelector('#download').addEventListener('click', () => { app.download() })
+		new App().connectToDOM(document, {
+			canvas: "#canvas",
+			fileInput: "#file",
+			clear: "#clear",
+			upload: "#upload",
+			copy: "#copy",
+			download: "#download",
+		})
 	</script>
 </body>
 </html>
