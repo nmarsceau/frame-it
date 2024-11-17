@@ -79,7 +79,7 @@ export class App {
 		if (file.type.startsWith("image/")) {
 			const reader = new FileReader()
 			reader.readAsDataURL(file)
-			reader.onload = () => {this.img.src = reader.result}
+			reader.onload = () => { this.img.src = reader.result }
 		} else {
 			this.setDefaultImage()
 		}
@@ -127,7 +127,7 @@ export class App {
 
 	download() {
 		const link = this.dom.createElement('a')
-		link.download = 'image.png'
+		link.download = 'image-with-border.png'
 		link.href = this.canvas.toDataURL()
 		link.click()
 	}
